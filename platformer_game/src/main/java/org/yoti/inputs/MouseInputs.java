@@ -1,7 +1,6 @@
 package org.yoti.inputs;
 
 import org.yoti.main.GamePanel;
-import org.yoti.main.GameWindow;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,7 +8,7 @@ import java.awt.event.MouseMotionListener;
 
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
 
     public MouseInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -47,6 +46,6 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        gamePanel.setRectPos(e.getX(), e.getY());
+        // gamePanel.setRectPos(e.getX(), e.getY());
     }
 }
