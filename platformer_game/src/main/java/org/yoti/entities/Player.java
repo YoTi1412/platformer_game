@@ -1,5 +1,7 @@
 package org.yoti.entities;
 
+import org.yoti.utils.LoadSave;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,7 +17,7 @@ public class Player extends Entity {
     private int playerAction = IDLE;
     private boolean playerMoving = false, playerAttacking = false;
     private boolean left, up, right, down;
-    public float playerSpeed = 2.0f;
+    public float playerSpeed = 1.5f;
     public Player(float x, float y) {
         super(x, y);
         loadAnimation();
@@ -74,7 +76,7 @@ public class Player extends Entity {
 
     private void updateAnimation() {
         animationTick++;
-        int animationSpeed = 15;
+        int animationSpeed = 20;
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
@@ -118,10 +120,7 @@ public class Player extends Entity {
     }
 
     private void loadAnimation() {
-        InputStream inputStream = getClass().getResourceAsStream("/player_sprites.png");
-
-        try {
-            BufferedImage img = ImageIO.read(inputStream);
+            BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
             animations = new BufferedImage[9][6];
 
@@ -130,16 +129,6 @@ public class Player extends Entity {
                     animations[i][j] = img.getSubimage(j * 64, i * 40, 64, 40);
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void resetDirectionBoolean() {
