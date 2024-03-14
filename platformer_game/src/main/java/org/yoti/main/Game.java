@@ -1,14 +1,26 @@
 package org.yoti.main;
 
+import org.yoti.entities.Player;
+
+import java.awt.*;
+
 public class Game implements Runnable {
     private final GamePanel gamePanel;
+    private Player player;
 
     // Constructor initializes the game panel, creates a game window, sets focus to the game panel, and starts the game loop.
     public Game() {
-        this.gamePanel = new GamePanel();
+        initClasses();
+
+        this.gamePanel = new GamePanel(this);
         GameWindow gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
+
         startGameLoop();
+    }
+
+    private void initClasses() {
+        player = new Player(200,200);
     }
 
     // Method to start the game loop in a new thread.
@@ -19,8 +31,13 @@ public class Game implements Runnable {
 
     // Method to update the game state.
     public void update() {
-        gamePanel.updateGame();
+        player.update();
     }
+
+    public void render(Graphics g) {
+        player.render(g);
+    }
+
 
     // Runnable interface implementation method containing the main game loop.
     @Override
@@ -70,5 +87,9 @@ public class Game implements Runnable {
                 updates = 0;
             }
         }
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
