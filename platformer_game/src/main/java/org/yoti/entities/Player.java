@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.yoti.utils.Constants.Directions.*;
-import static org.yoti.utils.Constants.Directions.DOWN;
 import static org.yoti.utils.Constants.PlayerConstants.*;
 
 
@@ -15,57 +13,65 @@ public class Player extends Entity {
     private BufferedImage[][] animations;
     private int animationTick, animationIndex;
     private int playerAction = IDLE;
-    private int playerDirection = -1;
-    private boolean playerMoving = false;
+    private boolean playerMoving = false, playerAttacking = false;
+    private boolean left, up, right, down;
+    public float playerSpeed = 2.0f;
     public Player(float x, float y) {
         super(x, y);
         loadAnimation();
     }
     public void update() {
+        updatePosition();
         updateAnimation();
         setAnimation();
-        updatePosition();
     }
     public void render(Graphics g) {
         g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, 256, 160, null);
     }
 
-    /**
-     * Updates the player's position based on movement direction.
-     */
     private void updatePosition() {
-        if (playerMoving) {
-            switch (playerDirection) {
-                case LEFT:
-                    x -= 1;
-                    break;
-                case UP:
-                    y -= 1;
-                    break;
-                case RIGHT:
-                    x += 1;
-                    break;
-                case DOWN:
-                    y += 1;
-                    break;
-            }
+        playerMoving = false;
+
+        if (left && !right) {
+            x -= playerSpeed;
+            playerMoving = true;
+        } else if (right && !left ){
+            x += playerSpeed;
+            playerMoving = true;
+        }
+
+        if (up && !down) {
+            y -= playerSpeed;
+            playerMoving = true;
+        } else if (down && !up ){
+            y += playerSpeed;
+            playerMoving = true;
         }
     }
 
-    /**
-     * Sets the appropriate player action based on movement.
-     */
     private void setAnimation() {
+        int startAnimation = playerAction;
+
         if (playerMoving) {
             playerAction = RUNNING;
         } else {
             playerAction = IDLE;
         }
+
+        if (playerAttacking) {
+            playerAction = ATTACK_1;
+        }
+        
+        if (startAnimation != playerAction) {
+            resetAnimationTick();
+        }
     }
 
-    /**
-     * Updates the animation index based on animation speed.
-     */
+    private void resetAnimationTick() {
+        animationTick = 0;
+        animationIndex = 0;
+    }
+
     private void updateAnimation() {
         animationTick++;
         int animationSpeed = 15;
@@ -74,25 +80,41 @@ public class Player extends Entity {
             animationIndex++;
             if (animationIndex >= GetSpriteAmount(playerAction)) {
                 animationIndex = 0;
+                playerAttacking = false;
             }
         }
     }
 
-    /**
-     * Sets the direction of player movement.
-     * @param direction The direction to set for player movement.
-     */
-    public void setDirection(int direction) {
-        this.playerDirection = direction;
-        playerMoving = true;
+    public boolean isLeft() {
+        return left;
     }
 
-    /**
-     * Sets the flag indicating whether the player is moving.
-     * @param playerMoving True if player is moving, false otherwise.
-     */
-    public void setPlayerMoving(boolean playerMoving) {
-        this.playerMoving = playerMoving;
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
+
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
+
+    public void setRight(boolean right) {
+        this.right = right;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public void setDown(boolean down) {
+        this.down = down;
     }
 
     private void loadAnimation() {
@@ -118,6 +140,16 @@ public class Player extends Entity {
                 e.printStackTrace();
             }
         }
+    }
 
+    public void resetDirectionBoolean() {
+        left = false;
+        up = false;
+        right = false;
+        down = false;
+    }
+
+    public void setPlayerAttacking(boolean playerAttacking) {
+        this.playerAttacking = playerAttacking;
     }
 }
