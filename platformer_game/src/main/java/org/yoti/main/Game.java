@@ -1,12 +1,14 @@
 package org.yoti.main;
 
 import org.yoti.entities.Player;
+import org.yoti.levels.LevelManager;
 
 import java.awt.*;
 
 public class Game implements Runnable {
     private final GamePanel gamePanel;
     private Player player;
+    private LevelManager levelManager;
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1.5f;
     public static final int TILES_IN_WIDTH = 26;
@@ -29,7 +31,9 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200,200);
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        levelManager = new LevelManager(this);
+
     }
 
     public void startGameLoop() {
@@ -39,9 +43,11 @@ public class Game implements Runnable {
 
     public void update() {
         player.update();
+        levelManager.update();
     }
 
     public void render(Graphics g) {
+        levelManager.draw(g);
         player.render(g);
     }
 

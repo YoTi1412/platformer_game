@@ -2,12 +2,10 @@ package org.yoti.entities;
 
 import org.yoti.utils.LoadSave;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
+import static org.yoti.main.Game.*;
 import static org.yoti.utils.Constants.PlayerConstants.*;
 
 
@@ -18,8 +16,8 @@ public class Player extends Entity {
     private boolean playerMoving = false, playerAttacking = false;
     private boolean left, up, right, down;
     public float playerSpeed = 1.5f;
-    public Player(float x, float y) {
-        super(x, y);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimation();
     }
     public void update() {
@@ -28,7 +26,7 @@ public class Player extends Entity {
         setAnimation();
     }
     public void render(Graphics g) {
-        g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, 256, 160, null);
+        g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, width, height, null); // 256 160
     }
 
     private void updatePosition() {
