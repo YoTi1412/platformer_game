@@ -1,12 +1,13 @@
 package org.yoti.entities;
 
+import org.yoti.main.Game;
 import org.yoti.utils.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static org.yoti.main.Game.*;
 import static org.yoti.utils.Constants.PlayerConstants.*;
+import static org.yoti.utils.HelpMethods.CanMoveHere;
 
 
 public class Player extends Entity {
@@ -16,9 +17,13 @@ public class Player extends Entity {
     private boolean playerMoving = false, playerAttacking = false;
     private boolean left, up, right, down;
     public float playerSpeed = 1.5f;
+    private int[][] levelData;
+    private float xDrawOffset = 21 * Game.SCALE;
+    private float yDrawOffset = 4 * Game.SCALE;
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimation();
+        initHitbox(x, y, 20 * (int)Game.SCALE, 28 * (int)Game.SCALE);
     }
     public void update() {
         updatePosition();
@@ -26,25 +31,34 @@ public class Player extends Entity {
         setAnimation();
     }
     public void render(Graphics g) {
-        g.drawImage(animations[playerAction][animationIndex], (int) x, (int) y, width, height, null); // 256 160
+        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
+        drawHitbox(g);
     }
 
     private void updatePosition() {
         playerMoving = false;
 
+        if (!left && !right && !up && !down) {
+            return;
+        }
+
+        float xSpeed = 0, ySpeed = 0;
+
         if (left && !right) {
-            x -= playerSpeed;
-            playerMoving = true;
+            xSpeed = -playerSpeed;
         } else if (right && !left ){
-            x += playerSpeed;
-            playerMoving = true;
+            xSpeed = playerSpeed;
         }
 
         if (up && !down) {
-            y -= playerSpeed;
-            playerMoving = true;
+            ySpeed = -playerSpeed;
         } else if (down && !up ){
-            y += playerSpeed;
+            ySpeed = playerSpeed;
+        }
+
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, levelData)) {
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
             playerMoving = true;
         }
     }
@@ -83,6 +97,10 @@ public class Player extends Entity {
                 playerAttacking = false;
             }
         }
+    }
+
+    public void loadLevelData(int[][] levelData) {
+        this.levelData = levelData;
     }
 
     public boolean isLeft() {

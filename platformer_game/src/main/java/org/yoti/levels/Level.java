@@ -1,13 +1,17 @@
 package org.yoti.levels;
 
 public class Level {
-    private int[][] levelData;
+    private final int[][] levelData;
 
     public Level(int[][] levelData) {
         this.levelData = levelData;
     }
 
     public int getSpriteIndex(int x, int y) {
-        return levelData[x][y];
+        return levelData[y][x];
+    }
+
+    public int[][] getLevelData() {
+        return levelData;
     }
 }
