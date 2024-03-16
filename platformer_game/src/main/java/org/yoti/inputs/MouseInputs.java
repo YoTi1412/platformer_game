@@ -1,5 +1,6 @@
 package org.yoti.inputs;
 
+import org.yoti.gamestates.GameStates;
 import org.yoti.main.GamePanel;
 
 import java.awt.event.MouseEvent;
@@ -16,8 +17,15 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setPlayerAttacking(true);
+        switch (GameStates.states) {
+            case MENU:
+                gamePanel.getGame().getGameMenu().mouseClicked(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseClicked(e);
+                break;
+            default:
+                break;
         }
     }
 

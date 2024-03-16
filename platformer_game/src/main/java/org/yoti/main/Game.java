@@ -1,14 +1,15 @@
 package org.yoti.main;
 
-import org.yoti.entities.Player;
-import org.yoti.levels.LevelManager;
+import org.yoti.gamestates.GameMenu;
+import org.yoti.gamestates.GameStates;
+import org.yoti.gamestates.Playing;
 
 import java.awt.*;
 
 public class Game implements Runnable {
     private final GamePanel gamePanel;
-    private Player player;
-    private LevelManager levelManager;
+    private Playing playing;
+    private GameMenu gameMenu;
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1f;
     public static final int TILES_IN_WIDTH = 26;
@@ -16,8 +17,6 @@ public class Game implements Runnable {
     public static final int TILES_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
     public static final int GAME_HEIGHT= TILES_SIZE * TILES_IN_HEIGHT;
-
-
 
 
     public Game() {
@@ -31,9 +30,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
-        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        gameMenu = new GameMenu(this);
+        playing = new Playing(this);
     }
 
     public void startGameLoop() {
@@ -42,13 +40,29 @@ public class Game implements Runnable {
     }
 
     public void update() {
-        player.update();
-        levelManager.update();
+        switch (GameStates.states) {
+            case MENU:
+                gameMenu.update();
+                break;
+            case PLAYING:
+                playing.update();
+                break;
+            default:
+                break;
+        }
     }
 
     public void render(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
+        switch (GameStates.states) {
+            case MENU:
+                gameMenu.draw(g);
+                break;
+            case PLAYING:
+                playing.draw(g);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -93,11 +107,18 @@ public class Game implements Runnable {
         }
     }
 
-    public Player getPlayer() {
-        return player;
-    }
 
     public void windowFocusLost() {
-        player.resetDirectionBoolean();
+        if (GameStates.states == GameStates.PLAYING) {
+            playing.getPlayer().resetDirectionBoolean();
+        }
+    }
+
+    public Playing getPlaying() {
+        return playing;
+    }
+
+    public GameMenu getGameMenu() {
+        return gameMenu;
     }
 }
