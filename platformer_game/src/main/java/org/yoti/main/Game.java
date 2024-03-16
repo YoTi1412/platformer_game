@@ -16,13 +16,13 @@ public class Game implements Runnable {
     public static final int TILES_IN_HEIGHT = 14;
     public static final int TILES_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
     public static final int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
-    public static final int GAME_HEIGHT= TILES_SIZE * TILES_IN_HEIGHT;
+    public static final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
 
 
     public Game() {
         initClasses();
 
-        this.gamePanel = new GamePanel(this);
+        gamePanel = new GamePanel(this);
         GameWindow gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
 
@@ -47,7 +47,10 @@ public class Game implements Runnable {
             case PLAYING:
                 playing.update();
                 break;
+            case OPTIONS:
+            case QUIT:
             default:
+                System.exit(0);
                 break;
         }
     }

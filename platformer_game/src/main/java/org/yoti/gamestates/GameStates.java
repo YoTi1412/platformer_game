@@ -2,7 +2,9 @@ package org.yoti.gamestates;
 
 public enum GameStates {
     PLAYING,
-    MENU;
+    MENU,
+    OPTIONS,
+    QUIT;
 
     public static GameStates states = MENU;
 }

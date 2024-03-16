@@ -6,6 +6,7 @@ import org.yoti.main.GamePanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Objects;
 
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
@@ -17,12 +18,20 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        // instead of switch
+        if (Objects.requireNonNull(GameStates.states) == GameStates.PLAYING) {
+            gamePanel.getGame().getPlaying().mouseClicked(e);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
         switch (GameStates.states) {
             case MENU:
-                gamePanel.getGame().getGameMenu().mouseClicked(e);
+                gamePanel.getGame().getGameMenu().mousePressed(e);
                 break;
             case PLAYING:
-                gamePanel.getGame().getPlaying().mouseClicked(e);
+                gamePanel.getGame().getPlaying().mousePressed(e);
                 break;
             default:
                 break;
@@ -30,13 +39,17 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
     public void mouseReleased(MouseEvent e) {
-
+        switch (GameStates.states) {
+            case MENU:
+                gamePanel.getGame().getGameMenu().mouseReleased(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseReleased(e);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -56,6 +69,15 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        switch (GameStates.states) {
+            case MENU:
+                gamePanel.getGame().getGameMenu().mouseMoved(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseMoved(e);
+                break;
+            default:
+                break;
+        }
     }
 }

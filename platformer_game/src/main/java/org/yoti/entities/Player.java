@@ -12,11 +12,11 @@ import static org.yoti.utils.HelpMethods.*;
 
 public class Player extends Entity {
     private BufferedImage[][] animations;
-    private int animationTick, animationIndex;
+    private int animationTick, animationIndex, animationSpeed = 25;
     private int playerAction = IDLE;
     private boolean playerMoving = false, playerAttacking = false;
     private boolean left, up, right, down, jump;
-    public float playerSpeed = 1.5f;
+    public float playerSpeed = 1.0f * Game.SCALE;
     private int[][] levelData;
     private float xDrawOffset = 21 * Game.SCALE;
     private float yDrawOffset = 4 * Game.SCALE;
@@ -32,7 +32,7 @@ public class Player extends Entity {
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimation();
-        initHitbox(x, y, 20 * (int)Game.SCALE, 27 * (int)Game.SCALE);
+        initHitbox(x, y, (int)(20 * Game.SCALE), (int)(27 * Game.SCALE));
     }
     public void update() {
         updatePosition();
@@ -145,7 +145,6 @@ public class Player extends Entity {
 
     private void updateAnimation() {
         animationTick++;
-        int animationSpeed = 20;
         if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
