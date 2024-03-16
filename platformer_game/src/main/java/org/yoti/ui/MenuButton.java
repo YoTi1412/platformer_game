@@ -11,7 +11,7 @@ import static org.yoti.utils.Constants.UI.Buttons.*;
 
 public class MenuButton {
     private int xPos, yPos, rowIndex, index;
-    private int xOffsetCenter = B_WIDTH / 2;
+    private final int xOffsetCenter = B_WIDTH / 2;
     private boolean mouseOver, mousePressed;
     private Rectangle bounds;
     private GameStates states;
