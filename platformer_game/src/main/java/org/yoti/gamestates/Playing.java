@@ -14,7 +14,7 @@ import static org.yoti.main.Game.SCALE;
 public class Playing extends States implements StatesMethods {
     private Player player;
     private LevelManager levelManager;
-    private boolean paused = true;
+    private boolean paused = false;
     private PauseOverlay pauseOverlay;
 
     public Playing(Game game) {
@@ -26,7 +26,7 @@ public class Playing extends States implements StatesMethods {
         levelManager = new LevelManager(game);
         player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
-        pauseOverlay = new PauseOverlay();
+        pauseOverlay = new PauseOverlay(this);
     }
 
     public Player getPlayer() {
@@ -39,10 +39,12 @@ public class Playing extends States implements StatesMethods {
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
-
-        pauseOverlay.update();
+        if (!paused) {
+            levelManager.update();
+            player.update();
+        } else {
+            pauseOverlay.update();
+        }
     }
 
     @Override
@@ -50,7 +52,9 @@ public class Playing extends States implements StatesMethods {
         levelManager.draw(g);
         player.render(g);
 
-        pauseOverlay.draw(g);
+        if (paused) {
+            pauseOverlay.draw(g);
+        }
     }
 
     @Override
@@ -81,6 +85,13 @@ public class Playing extends States implements StatesMethods {
         }
     }
 
+
+    public void mouseDragged(MouseEvent e) {
+        if (paused) {
+            pauseOverlay.mouseDragged(e);
+        }
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -95,8 +106,8 @@ public class Playing extends States implements StatesMethods {
                 player.setJump(true);
                 break;
             case KeyEvent.VK_ESCAPE:
-            case KeyEvent.VK_BACK_SPACE:
-                GameStates.states = GameStates.MENU;
+                paused = !paused;
+                break;
         }
     }
 
@@ -114,5 +125,9 @@ public class Playing extends States implements StatesMethods {
                 player.setJump(false);
                 break;
         }
+    }
+
+    public void unpauseGame() {
+        paused = false;
     }
 }
