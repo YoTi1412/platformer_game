@@ -9,8 +9,11 @@ import org.yoti.utils.LoadSave;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import static org.yoti.main.Game.SCALE;
+import static org.yoti.utils.Constants.Environment.*;
 
 public class Playing extends States implements StatesMethods {
     private Player player;
@@ -23,10 +26,21 @@ public class Playing extends States implements StatesMethods {
     private int levelTilessWide = LoadSave.GetLevelData()[0].length;
     private int maxTilessWide = levelTilessWide - Game.TILES_IN_WIDTH;
     private int maxLevelOffsetX = maxTilessWide * Game.TILES_SIZE;
+    private BufferedImage backgroundImage, bigCloud, smallCloud;
+    private int[] smallCloudsPos;
+    private Random random = new Random();
 
     public Playing(Game game) {
         super(game);
         initClasses();
+
+        backgroundImage = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BACKGROUND_IMAGE);
+        bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
+        smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
+        smallCloudsPos = new int[8];
+        for (int i = 0; i < smallCloudsPos.length; i++){
+            smallCloudsPos[i] = (int)(90 * SCALE) + random.nextInt((int) (100 * SCALE));
+        }
     }
 
     private void initClasses() {
@@ -74,6 +88,9 @@ public class Playing extends States implements StatesMethods {
 
     @Override
     public void draw(Graphics g) {
+        g.drawImage(backgroundImage, 0,0,Game.GAME_WIDTH,Game.GAME_HEIGHT,null);
+        drawClouds(g);
+        
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
 
@@ -81,6 +98,16 @@ public class Playing extends States implements StatesMethods {
             g.setColor(new Color(0,0,0,150));
             g.fillRect(0,0,Game.GAME_WIDTH, Game.GAME_HEIGHT);
             pauseOverlay.draw(g);
+        }
+    }
+
+    private void drawClouds(Graphics g) {
+        for (int i = 0; i < 3; i++) {
+            g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int)(xLevelOffset * 0.3),(int)(204 * Game.SCALE),BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+        }
+
+        for (int i = 0; i < smallCloudsPos.length; i++) {
+            g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int)(xLevelOffset * 0.7), smallCloudsPos[i],SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
         }
     }
 
