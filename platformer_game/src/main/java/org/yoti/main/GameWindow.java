@@ -15,18 +15,16 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         pack();
+        setVisible(true);
         addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
 
             }
-
             @Override
             public void windowLostFocus(WindowEvent e) {
                 gamePanel.getGame().windowFocusLost();
             }
         });
-
-        setVisible(true);
     }
 }
