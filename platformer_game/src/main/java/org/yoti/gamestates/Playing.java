@@ -1,5 +1,6 @@
 package org.yoti.gamestates;
 
+import org.yoti.entities.EnemyManager;
 import org.yoti.entities.Player;
 import org.yoti.levels.LevelManager;
 import org.yoti.main.Game;
@@ -17,6 +18,7 @@ import static org.yoti.utils.Constants.Environment.*;
 
 public class Playing extends States implements StatesMethods {
     private Player player;
+    private EnemyManager enemyManager;
     private LevelManager levelManager;
     private boolean paused = false;
     private PauseOverlay pauseOverlay;
@@ -45,6 +47,7 @@ public class Playing extends States implements StatesMethods {
 
     private void initClasses() {
         levelManager = new LevelManager(game);
+        enemyManager = new EnemyManager(this);
         player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
@@ -63,6 +66,7 @@ public class Playing extends States implements StatesMethods {
         if (!paused) {
             levelManager.update();
             player.update();
+            enemyManager.update();
             checkIfCloseToBorder();
         } else {
             pauseOverlay.update();
@@ -93,6 +97,7 @@ public class Playing extends States implements StatesMethods {
         
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
+        enemyManager.draw(g, xLevelOffset);
 
         if (paused) {
             g.setColor(new Color(0,0,0,150));
