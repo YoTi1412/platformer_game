@@ -12,9 +12,9 @@ public class GameWindow extends JFrame {
 
         setDefaultCloseOperation(jframe.EXIT_ON_CLOSE);
         add(gamePanel);
-        setLocationRelativeTo(null);
         setResizable(false);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
         addWindowFocusListener(new WindowFocusListener() {
             @Override
