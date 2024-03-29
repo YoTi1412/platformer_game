@@ -2,9 +2,8 @@ package org.yoti.entities;
 
 import org.yoti.main.Game;
 
-import static org.yoti.utils.Constants.Directions.LEFT;
+import static org.yoti.utils.Constants.Directions.*;
 import static org.yoti.utils.Constants.EnemyConstants.*;
-import static org.yoti.utils.HelpMethods.*;
 
 public class Crabby extends Enemy{
     public Crabby(float x, float y) {
@@ -40,5 +39,19 @@ public class Crabby extends Enemy{
                     break;
             }
         }
+    }
+
+    public int flipX() {
+        if (walkDirection == RIGHT)
+            return width;
+        else
+            return 0;
+    }
+
+    public int flipW() {
+        if (walkDirection == RIGHT)
+            return -1;
+        else
+            return 1;
     }
 }

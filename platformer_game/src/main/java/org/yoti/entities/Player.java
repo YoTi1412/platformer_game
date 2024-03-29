@@ -45,7 +45,8 @@ public class Player extends Entity {
 
     // attack Box
     private Rectangle2D.Float attackBox;
-
+    private int flipX = 0;
+    private int flipW = 1;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -81,7 +82,10 @@ public class Player extends Entity {
     }
 
     public void render(Graphics g, int xLevelOffset) {
-        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset) - xLevelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+        g.drawImage(animations[playerAction][animationIndex],
+                (int)(hitbox.x - xDrawOffset) - xLevelOffset + flipX,
+                (int)(hitbox.y - yDrawOffset),
+                width * flipW, height, null);
         // drawHitbox(g, xLevelOffset);
         drawAttackBox(g, xLevelOffset);
 
@@ -116,9 +120,13 @@ public class Player extends Entity {
 
         if (left) {
             xSpeed -= playerSpeed;
+            flipX = width;
+            flipW = -1;
         }
         if (right){
             xSpeed += playerSpeed;
+            flipX = 0;
+            flipW = 1;
         }
 
         if (!inAir) {
@@ -275,13 +283,14 @@ public class Player extends Entity {
 
     public void changeHealth(int value) {
         currentHealth += value;
-
-        if (currentHealth <= 0) {
+        currentHealth = Math.max(Math.min(currentHealth, maxHealth), 0); // same code but simpler
+        /**
+         * if (currentHealth <= 0) {
             currentHealth = 0;
             // gameOver();
         } else if (currentHealth >= maxHealth) {
             currentHealth = maxHealth;
-        }
+        } */
     }
 
     public void resetDirectionBoolean() {
