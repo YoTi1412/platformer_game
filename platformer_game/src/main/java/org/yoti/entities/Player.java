@@ -1,5 +1,6 @@
 package org.yoti.entities;
 
+import org.yoti.gamestates.Playing;
 import org.yoti.main.Game;
 import org.yoti.utils.LoadSave;
 
@@ -47,9 +48,12 @@ public class Player extends Entity {
     private Rectangle2D.Float attackBox;
     private int flipX = 0;
     private int flipW = 1;
+    private boolean attackChecked;
+    private Playing playing;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         loadAnimation();
         initHitbox(x, y, (int)(20 * Game.SCALE), (int)(27 * Game.SCALE));
         initAttackBox();
@@ -61,11 +65,30 @@ public class Player extends Entity {
 
     public void update() {
         updateHealthBar();
+
+        if(currentHealth <= 0) {
+            playing.setGameOver(true);
+            return;
+        }
+
         updateAttackBox();
 
         updatePosition();
+
+        if (playerAttacking) {
+            checkAttack();
+        }
         updateAnimation();
         setAnimation();
+    }
+
+    private void checkAttack() {
+        if (attackChecked || animationIndex != 1) {
+            return;
+        }
+
+        attackChecked = true;
+        playing.checkEnemyHit(attackBox);
     }
 
     private void updateAttackBox() {
@@ -87,7 +110,7 @@ public class Player extends Entity {
                 (int)(hitbox.y - yDrawOffset),
                 width * flipW, height, null);
         // drawHitbox(g, xLevelOffset);
-        drawAttackBox(g, xLevelOffset);
+        // drawAttackBox(g, xLevelOffset);
 
         drawUI(g);
     }
@@ -196,6 +219,11 @@ public class Player extends Entity {
 
         if (playerAttacking) {
             playerAction = ATTACK;
+            if (startAnimation != ATTACK) {
+                animationIndex = 1;
+                animationTick = 0;
+                return;
+            }
         }
         
         if (startAnimation != playerAction) {
@@ -216,6 +244,7 @@ public class Player extends Entity {
             if (animationIndex >= GetSpriteAmount(playerAction)) {
                 animationIndex = 0;
                 playerAttacking = false;
+                attackChecked = false;
             }
         }
     }
@@ -302,5 +331,21 @@ public class Player extends Entity {
 
     public void setPlayerAttacking(boolean playerAttacking) {
         this.playerAttacking = playerAttacking;
+    }
+
+    public void resetAll() {
+        resetDirectionBoolean();
+        inAir = false;
+        playerAttacking = false;
+        playerMoving = false;
+        playerAction = IDLE;
+        currentHealth = maxHealth;
+
+        hitbox.x = x;
+        hitbox.y = y;
+
+        if (!IsEntityOnFloor(hitbox, levelData)) {
+            inAir = true;
+        }
     }
 }

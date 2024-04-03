@@ -2,21 +2,40 @@ package org.yoti.entities;
 
 import org.yoti.main.Game;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 import static org.yoti.utils.Constants.Directions.*;
 import static org.yoti.utils.Constants.EnemyConstants.*;
 
 public class Crabby extends Enemy{
+
+    // attack Box
+    private Rectangle2D.Float attackBox;
+    private int attackBoxOffsetX;
     public Crabby(float x, float y) {
         super(x, y, CRABBY_WIDTH, CRABBY_HEIGHT, CRABBY);
         initHitbox(x,y,(int)(22 * Game.SCALE),(int)(19 * Game.SCALE));
+        initAttackBox();
+    }
+
+    private void initAttackBox() {
+        attackBox = new Rectangle2D.Float(x,y,(int)(82 * Game.SCALE),(int)(19 * Game.SCALE));
+        attackBoxOffsetX = (int)(30 * Game.SCALE);
     }
 
     public void update(int[][] levelData, Player player) {
-        updateMove(levelData, player);
+        updateBehavior(levelData, player);
         updateAnimationTick();
+        updateAttackBox();
     }
 
-    private void updateMove(int[][] levelData, Player player) {
+    private void updateAttackBox() {
+        attackBox.x = hitbox.x - attackBoxOffsetX;
+        attackBox.y = hitbox.y;
+    }
+
+    private void updateBehavior(int[][] levelData, Player player) {
         if (firstUpdate) {
             firstUpdateCheck(levelData);
         }
@@ -37,8 +56,23 @@ public class Crabby extends Enemy{
                     }
                     move(levelData);
                     break;
+                case ATTACK:
+                    if (animationIndex == 0) {
+                        attackChecked = false;
+                    }
+                    if (animationIndex == 3 && !attackChecked) {
+                        checkPlayerHit(attackBox, player);
+                    }
+                    break;
+                case HIT:
+                    break;
             }
         }
+    }
+
+    public void drawAttackHitbox(Graphics g, int xLevelOffset) {
+        g.setColor(Color.red);
+        g.drawRect((int)(attackBox.x - xLevelOffset),(int) attackBox.y,(int) attackBox.width,(int) attackBox.height);
     }
 
     public int flipX() {
