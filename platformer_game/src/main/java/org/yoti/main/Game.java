@@ -3,8 +3,10 @@ package org.yoti.main;
 import org.yoti.gamestates.GameMenu;
 import org.yoti.gamestates.GameStates;
 import org.yoti.gamestates.Playing;
+import org.yoti.utils.LoadSave;
 
 import java.awt.*;
+import java.net.URISyntaxException;
 
 public class Game implements Runnable {
     private final GamePanel gamePanel;

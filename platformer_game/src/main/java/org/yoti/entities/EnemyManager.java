@@ -1,6 +1,7 @@
 package org.yoti.entities;
 
 import org.yoti.gamestates.Playing;
+import org.yoti.levels.Level;
 import org.yoti.utils.LoadSave;
 import static org.yoti.utils.Constants.EnemyConstants.*;
 
@@ -17,19 +18,24 @@ public class EnemyManager {
     public EnemyManager(Playing playing) {
         this.playing = playing;
         loadEnemyImages();
-        addEnemies();
     }
 
-    private void addEnemies() {
-        crabbies = LoadSave.GetCrabs();
-        System.out.println("size of crabs = " + crabbies.size());
+    public void loadEnemies(Level level) {
+        crabbies = level.getCrabbies();
     }
 
     public void update(int[][] levelData, Player player) {
+        boolean isAnyActive = false;
+
         for (Crabby c : crabbies) {
             if (c.isActive()) {
                 c.update(levelData, player);
+                isAnyActive = true;
             }
+        }
+
+        if (!isAnyActive) {
+            playing.setLevelCompleted(true);
         }
     }
 

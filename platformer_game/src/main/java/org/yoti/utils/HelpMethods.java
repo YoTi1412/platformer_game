@@ -1,8 +1,14 @@
 package org.yoti.utils;
 
+import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import static org.yoti.utils.Constants.EnemyConstants.CRABBY;
 
 public class HelpMethods {
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] levelData) {
@@ -103,5 +109,46 @@ public class HelpMethods {
         } else {
             return IsAllTilesWalkable(firstXTile,secondXTile,tileY,levelData);
         }
+    }
+
+    public static int[][] GetLevelData(BufferedImage image) {
+        int[][] levelData = new int[image.getHeight()][image.getWidth()];
+
+        for (int j = 0; j < image.getHeight(); j++)
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getRed();
+                if (value >= 48)
+                    value = 0;
+                levelData[j][i] = value;
+            }
+        return levelData;
+    }
+
+    public static ArrayList<Crabby> GetCrabs(BufferedImage image) {
+        ArrayList<Crabby> list = new ArrayList<>();
+
+        for (int j = 0; j < image.getHeight(); j++)
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == CRABBY) {
+                    list.add((new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE)));
+                }
+            }
+        return list;
+    }
+
+    public static Point GetPlayerSpawn(BufferedImage image) {
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == CRABBY) {
+                    return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+                }
+            }
+        }
+        return new Point(1 * Game.TILES_SIZE, 1 * Game.TILES_SIZE);
     }
 }
