@@ -1,5 +1,6 @@
 package org.yoti.objects;
 
+import org.yoti.entities.Player;
 import org.yoti.gamestates.Playing;
 import org.yoti.levels.Level;
 import org.yoti.utils.LoadSave;
@@ -14,12 +15,20 @@ import static org.yoti.utils.Constants.ObjectConstants.*;
 public class ObjectManager {
     private Playing playing;
     private BufferedImage[][] potionImages, containerImages;
+    private BufferedImage spikeImage;
     private ArrayList<Potions> potions;
     private ArrayList<GameContainers> containers;
+    private ArrayList<Spike> spikes;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
         loadImages();
+    }
+
+    public void checkSpikesTouched(Player p) {
+        for (Spike s : spikes)
+            if (s.getHitbox().intersects(p.getHitbox()))
+                p.kill();
     }
 
     public void checkObjectTouched(Rectangle2D.Float hitbox) {
@@ -76,6 +85,8 @@ public class ObjectManager {
                 containerImages[j][i] = containerSprite.getSubimage(40 * i, 30 * j, 40, 30);
             }
         }
+
+        spikeImage = LoadSave.GetSpriteAtlas(LoadSave.TRAP_ATLAS);
     }
 
     public void update() {
@@ -91,6 +102,13 @@ public class ObjectManager {
     public void draw(Graphics g, int xLvlOffset) {
         drawPotions(g, xLvlOffset);
         drawContainers(g, xLvlOffset);
+        drawTraps(g, xLvlOffset);
+    }
+
+    private void drawTraps(Graphics g, int xLevelOffset) {
+        for (Spike s : spikes) {
+            g.drawImage(spikeImage, (int) (s.getHitbox().x - xLevelOffset), (int) (s.getHitbox().y - s.getYDrawOffset()), SPIKE_WIDTH, SPIKE_HEIGHT, null);
+        }
     }
 
     private void drawContainers(Graphics g, int xLevelOffset) {
@@ -121,6 +139,7 @@ public class ObjectManager {
     public void loadObjects(Level newLevel) {
         potions = new ArrayList<>(newLevel.getPotions());
         containers = new ArrayList<>(newLevel.getContainers());
+        spikes = newLevel.getSpikes();
     }
 
     public void resetAllObjects() {

@@ -295,4 +295,8 @@ public class Playing extends States implements StatesMethods {
     public LevelManager getLevelManager() {
         return levelManager;
     }
+
+    public void checkSpikesTouched(Player p) {
+        objectManager.checkSpikesTouched(p);
+    }
 }

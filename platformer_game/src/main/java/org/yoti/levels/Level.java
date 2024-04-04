@@ -4,6 +4,7 @@ import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
 import org.yoti.objects.GameContainers;
 import org.yoti.objects.Potions;
+import org.yoti.objects.Spike;
 import org.yoti.utils.HelpMethods;
 
 
@@ -18,6 +19,7 @@ public class Level {
     private ArrayList<Crabby> crabbies;
     private ArrayList<Potions> potions;
     private ArrayList<GameContainers> containers;
+    private ArrayList<Spike> spikes;
     private int levelTilessWide;
     private int maxTilessWide;
     private int maxLevelOffsetX;
@@ -30,8 +32,13 @@ public class Level {
         creatEnemies();
         createPotions();
         createContainers();
+        createSpikes();
         calculateLevelOffsets();
         calculatePlayerSpawn();
+    }
+
+    private void createSpikes() {
+        spikes = HelpMethods.GetSpikes(image);
     }
 
     private void createContainers() {
@@ -86,5 +93,9 @@ public class Level {
 
     public ArrayList<GameContainers> getContainers() {
         return containers;
+    }
+
+    public ArrayList<Spike> getSpikes() {
+        return spikes;
     }
 }

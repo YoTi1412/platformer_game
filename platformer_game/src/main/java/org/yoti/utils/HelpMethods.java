@@ -4,6 +4,7 @@ import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
 import org.yoti.objects.GameContainers;
 import org.yoti.objects.Potions;
+import org.yoti.objects.Spike;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -176,6 +177,21 @@ public class HelpMethods {
                 int value = color.getBlue();
                 if (value == BOX || value == BARREL) {
                     list.add(new GameContainers(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                }
+            }
+        }
+        return list;
+    }
+
+    public static ArrayList<Spike> GetSpikes(BufferedImage image) {
+        ArrayList<Spike> list = new ArrayList<>();
+
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == SPIKE) {
+                    list.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, SPIKE));
                 }
             }
         }
