@@ -6,41 +6,36 @@ import java.awt.geom.Rectangle2D;
 
 import static org.yoti.utils.Constants.Directions.*;
 import static org.yoti.utils.Constants.EnemyConstants.*;
+import static org.yoti.utils.Constants.*;
 import static org.yoti.utils.HelpMethods.*;
 
 public abstract class Enemy extends Entity {
-    protected int animationIndex, enemyState, enemyType;
-    protected int animationTick, animationSpeed = 25;
+    protected int enemyType;
     protected boolean firstUpdate = true;
-    protected boolean inAir;
-    protected float fallSpeed;
-    protected float gravity = 0.04f * Game.SCALE;
     protected float walkSpeed = 0.35f * Game.SCALE;
     protected int walkDirection = LEFT;
     protected int tileY;
     protected float attackDistance = Game.TILES_SIZE;
-    protected int maxHealth;
-    protected int currentHealth;
     protected boolean active = true;
     protected boolean attackChecked;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
-        initHitbox(x,y,width,height);
         maxHealth = GetMaxHealth(enemyType);
         currentHealth = maxHealth;
+        walkSpeed = Game.SCALE * 0.35f;
     }
     protected void updateAnimationTick() {
         animationTick++;
-        if (animationTick >= animationSpeed) {
+        if (animationTick >= ANIMATION_SPEED) {
             animationTick = 0;
             animationIndex++;
-            if (animationIndex >= GetSpriteAmount(enemyType, enemyState)) {
+            if (animationIndex >= GetSpriteAmount(enemyType, state)) {
                 animationIndex = 0;
 
-                switch (enemyState) {
-                    case ATTACK, HIT -> enemyState = IDLE;
+                switch (state) {
+                    case ATTACK, HIT -> state = IDLE;
                     case DEAD -> active = false;
                 }
             }
@@ -54,12 +49,12 @@ public abstract class Enemy extends Entity {
     }
 
     protected void updateInAir(int[][] levelData) {
-        if (CanMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, levelData)) {
-            hitbox.y += fallSpeed;
-            fallSpeed += gravity;
+        if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, levelData)) {
+            hitbox.y += airSpeed;
+            airSpeed += GRAVITY;
         } else {
             inAir = false;
-            hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
+            hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
             tileY = (int)(hitbox.y / Game.TILES_SIZE);
         }
     }
@@ -83,7 +78,7 @@ public abstract class Enemy extends Entity {
     }
 
     protected void newState(int enemyState) {
-        this.enemyState = enemyState;
+        this.state = enemyState;
         animationTick = 0;
         animationIndex = 0;
     }
@@ -149,15 +144,7 @@ public abstract class Enemy extends Entity {
         currentHealth = maxHealth;
         newState(IDLE);
         active = true;
-        fallSpeed = 0;
-    }
-
-    public int getAnimationIndex() {
-        return animationIndex;
-    }
-
-    public int getEnemyState() {
-        return enemyState;
+        airSpeed = 0;
     }
 
     public boolean isActive() {

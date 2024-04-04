@@ -11,11 +11,10 @@ import static org.yoti.utils.Constants.EnemyConstants.*;
 public class Crabby extends Enemy{
 
     // attack Box
-    private Rectangle2D.Float attackBox;
     private int attackBoxOffsetX;
     public Crabby(float x, float y) {
         super(x, y, CRABBY_WIDTH, CRABBY_HEIGHT, CRABBY);
-        initHitbox(x,y,(int)(22 * Game.SCALE),(int)(19 * Game.SCALE));
+        initHitbox(22,19);
         initAttackBox();
     }
 
@@ -42,7 +41,7 @@ public class Crabby extends Enemy{
         if (inAir) {
             updateInAir(levelData);
         } else {
-            switch (enemyState) {
+            switch (state) {
                 case IDLE:
                     newState(RUNNING);
                     break;
@@ -68,11 +67,6 @@ public class Crabby extends Enemy{
                     break;
             }
         }
-    }
-
-    public void drawAttackHitbox(Graphics g, int xLevelOffset) {
-        g.setColor(Color.red);
-        g.drawRect((int)(attackBox.x - xLevelOffset),(int) attackBox.y,(int) attackBox.width,(int) attackBox.height);
     }
 
     public int flipX() {
