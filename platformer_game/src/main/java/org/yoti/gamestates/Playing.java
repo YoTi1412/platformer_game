@@ -291,4 +291,8 @@ public class Playing extends States implements StatesMethods {
     public void checkObjectHit(Rectangle2D.Float attackBox) {
         objectManager.checkObjectHit(attackBox);
     }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
+    }
 }
