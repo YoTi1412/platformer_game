@@ -40,6 +40,8 @@ public class GameObjects {
                 if (objectType == BARREL || objectType == BOX) {
                     doAnimation = false;
                     active = false;
+                } else if (objectType == CANNON_LEFT || objectType == CANNON_RIGHT) {
+                    doAnimation = false;
                 }
             }
         }
@@ -50,7 +52,7 @@ public class GameObjects {
         animationTick = 0;
         animationIndex = 0;
         active = true;
-        if (objectType == BARREL || objectType == BOX) {
+        if (objectType == BARREL || objectType == BOX || objectType == CANNON_LEFT || objectType == CANNON_RIGHT) {
             doAnimation = false;
         } else {
             doAnimation = true;
@@ -79,6 +81,10 @@ public class GameObjects {
 
     public int getAnimationIndex() {
         return animationIndex;
+    }
+
+    public void setAnimation(boolean doAnimation) {
+        this.doAnimation = doAnimation;
     }
 
     public void setActive(boolean active) {

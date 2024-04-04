@@ -2,6 +2,7 @@ package org.yoti.utils;
 
 import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
+import org.yoti.objects.Cannon;
 import org.yoti.objects.GameContainers;
 import org.yoti.objects.Potions;
 import org.yoti.objects.Spike;
@@ -92,15 +93,47 @@ public class HelpMethods {
         }
     }
 
-    public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] levelData) {
+    public static ArrayList<Cannon> GetCannons(BufferedImage img) {
+        ArrayList<Cannon> list = new ArrayList<>();
+        for (int j = 0; j < img.getHeight(); j++) {
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == CANNON_LEFT || value == CANNON_RIGHT) {
+                    list.add(new Cannon(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                }
+            }
+        }
+        return list;
+    }
+
+    public static boolean CanCannonSeePlayer(int[][] levelData, Rectangle2D.Float firstHitbox, Rectangle2D.Float secondHitbox, int yTile) {
+        int firstXTile = (int) (firstHitbox.x / Game.TILES_SIZE);
+        int secondXTile = (int) (secondHitbox.x / Game.TILES_SIZE);
+
+        if (firstXTile > secondXTile) {
+            return IsAllTilesClear(secondXTile, firstXTile, yTile, levelData);
+        } else {
+            return IsAllTilesClear(firstXTile, secondXTile, yTile, levelData);
+        }
+    }
+
+    public static boolean IsAllTilesClear(int xStart, int xEnd, int y, int[][] levelData) {
         for (int i = 0; i < xEnd - xStart; i++) {
             if (IsTileSolid(xStart + i, y, levelData)) {
                 return false;
             }
-            if (!IsTileSolid(xStart + i, y + 1, levelData)) {
-                return false;
-            }
         }
+        return true;
+    }
+
+    public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] levelData) {
+        if (IsAllTilesClear(xStart, xEnd, y, levelData))
+            for (int i = 0; i < xEnd - xStart; i++) {
+                if (!IsTileSolid(xStart + i, y + 1, levelData)) {
+                    return false;
+                }
+            }
         return true;
     }
 
@@ -185,7 +218,6 @@ public class HelpMethods {
 
     public static ArrayList<Spike> GetSpikes(BufferedImage image) {
         ArrayList<Spike> list = new ArrayList<>();
-
         for (int j = 0; j < image.getHeight(); j++) {
             for (int i = 0; i < image.getWidth(); i++) {
                 Color color = new Color(image.getRGB(i, j));

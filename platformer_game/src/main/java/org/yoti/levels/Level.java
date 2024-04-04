@@ -2,6 +2,7 @@ package org.yoti.levels;
 
 import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
+import org.yoti.objects.Cannon;
 import org.yoti.objects.GameContainers;
 import org.yoti.objects.Potions;
 import org.yoti.objects.Spike;
@@ -20,6 +21,7 @@ public class Level {
     private ArrayList<Potions> potions;
     private ArrayList<GameContainers> containers;
     private ArrayList<Spike> spikes;
+    private ArrayList<Cannon> cannons;
     private int levelTilessWide;
     private int maxTilessWide;
     private int maxLevelOffsetX;
@@ -33,8 +35,13 @@ public class Level {
         createPotions();
         createContainers();
         createSpikes();
+        createCannons();
         calculateLevelOffsets();
         calculatePlayerSpawn();
+    }
+
+    private void createCannons() {
+        cannons = HelpMethods.GetCannons(image);
     }
 
     private void createSpikes() {
@@ -97,5 +104,9 @@ public class Level {
 
     public ArrayList<Spike> getSpikes() {
         return spikes;
+    }
+
+    public ArrayList<Cannon> getCannons() {
+        return cannons;
     }
 }
