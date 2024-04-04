@@ -2,10 +2,7 @@ package org.yoti.utils;
 
 import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
-import org.yoti.objects.Cannon;
-import org.yoti.objects.GameContainers;
-import org.yoti.objects.Potions;
-import org.yoti.objects.Spike;
+import org.yoti.objects.*;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -228,5 +225,9 @@ public class HelpMethods {
             }
         }
         return list;
+    }
+
+    public static boolean IsProjectileHittingLevel(Projectile p, int[][] levelData) {
+        return IsSolid(p.getHitbox().x + p.getHitbox().width / 2, p.getHitbox().y + p.getHitbox().height / 2, levelData);
     }
 }

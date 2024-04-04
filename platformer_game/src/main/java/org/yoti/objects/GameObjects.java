@@ -94,4 +94,8 @@ public class GameObjects {
     public void setDoAnimation(boolean doAnimation) {
         this.doAnimation = doAnimation;
     }
+
+    public int getAnimationTick() {
+        return animationTick;
+    }
 }
