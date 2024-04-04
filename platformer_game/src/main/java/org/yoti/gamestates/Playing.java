@@ -4,6 +4,7 @@ import org.yoti.entities.EnemyManager;
 import org.yoti.entities.Player;
 import org.yoti.levels.LevelManager;
 import org.yoti.main.Game;
+import org.yoti.objects.ObjectManager;
 import org.yoti.ui.GameOverOverlay;
 import org.yoti.ui.LevelCompletedOverlay;
 import org.yoti.ui.PauseOverlay;
@@ -24,9 +25,10 @@ public class Playing extends States implements StatesMethods {
     private EnemyManager enemyManager;
     private LevelManager levelManager;
     private GameOverOverlay gameOverOverlay;
-    private boolean paused = false;
     private PauseOverlay pauseOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
+    private ObjectManager objectManager;
+    private boolean paused = false;
     private int xLevelOffset;
     private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
     private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
@@ -70,6 +72,7 @@ public class Playing extends States implements StatesMethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
+        objectManager = new ObjectManager(this);
 
         player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
@@ -96,6 +99,7 @@ public class Playing extends States implements StatesMethods {
             levelCompletedOverlay.update();
         } else if (!gameOver){
             levelManager.update();
+            objectManager.update();
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkIfCloseToBorder();
@@ -127,6 +131,7 @@ public class Playing extends States implements StatesMethods {
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
         enemyManager.draw(g, xLevelOffset);
+        objectManager.draw(g, xLevelOffset);
 
         if (paused) {
             g.setColor(new Color(0,0,0,150));
@@ -271,5 +276,9 @@ public class Playing extends States implements StatesMethods {
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.levelCompleted = levelCompleted;
+    }
+
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 }
