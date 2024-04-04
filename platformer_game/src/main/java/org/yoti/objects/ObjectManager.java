@@ -1,9 +1,11 @@
 package org.yoti.objects;
 
 import org.yoti.gamestates.Playing;
+import org.yoti.levels.Level;
 import org.yoti.utils.LoadSave;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -18,6 +20,42 @@ public class ObjectManager {
     public ObjectManager(Playing playing) {
         this.playing = playing;
         loadImages();
+    }
+
+    public void checkObjectTouched(Rectangle2D.Float hitbox) {
+        for (Potions p : potions) {
+            if (p.isActive()) {
+                if (hitbox.intersects(p.getHitbox())) {
+                    p.setActive(false);
+                    applyEffectToPlayer(p);
+                }
+            }
+        }
+    }
+
+    public void applyEffectToPlayer(Potions p) {
+        if (p.getObjectType() == RED_POTION) {
+            playing.getPlayer().changeHealth(RED_POTION_VALUE);
+        }
+        else {
+            playing.getPlayer().changePower(BLUE_POTION_VALUE);
+        }
+    }
+
+    public void checkObjectHit(Rectangle2D.Float attackbox) {
+        for (GameContainers gc : containers) {
+            if (gc.isActive()) {
+                if (gc.getHitbox().intersects(attackbox)) {
+                    gc.setDoAnimation(true);
+                    int type = 0;
+                    if (gc.getObjectType() == BARREL) {
+                        type = 1;
+                    }
+                    potions.add(new Potions((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
+                    return;
+                }
+            }
+        }
     }
 
     private void loadImages() {
@@ -77,6 +115,21 @@ public class ObjectManager {
                 g.drawImage(potionImages[type][p.getAnimationIndex()], (int) (p.getHitbox().x - p.getXDrawOffset() - xLevelOffset), (int) (p.getHitbox().y - p.getYDrawOffset()), POTION_WIDTH, POTION_HEIGHT,
                         null);
             }
+        }
+    }
+
+    public void loadObjects(Level newLevel) {
+        potions = newLevel.getPotions();
+        containers = newLevel.getContainers();
+    }
+
+    public void resetAllObjects() {
+        for (Potions p : potions) {
+            p.reset();
+        }
+
+        for (GameContainers gc : containers) {
+            gc.reset();
         }
     }
 }

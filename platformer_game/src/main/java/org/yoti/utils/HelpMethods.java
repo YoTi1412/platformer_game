@@ -2,13 +2,16 @@ package org.yoti.utils;
 
 import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
+import org.yoti.objects.GameContainers;
+import org.yoti.objects.Potions;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static org.yoti.utils.Constants.EnemyConstants.CRABBY;
+import static org.yoti.utils.Constants.EnemyConstants.*;
+import static org.yoti.utils.Constants.ObjectConstants.*;
 
 public class HelpMethods {
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] levelData) {
@@ -148,5 +151,34 @@ public class HelpMethods {
                     return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
             }
         return new Point(Game.TILES_SIZE, Game.TILES_SIZE);
+    }
+
+    public static ArrayList<Potions> GetPotions(BufferedImage image) {
+        ArrayList<Potions> list = new ArrayList<>();
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == RED_POTION || value == BLUE_POTION) {
+                    list.add(new Potions(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public static ArrayList<GameContainers> GetContainers(BufferedImage image) {
+        ArrayList<GameContainers> list = new ArrayList<>();
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == BOX || value == BARREL) {
+                    list.add(new GameContainers(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                }
+            }
+        }
+        return list;
     }
 }

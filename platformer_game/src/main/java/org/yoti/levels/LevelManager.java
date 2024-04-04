@@ -48,7 +48,7 @@ public class LevelManager {
             }
     }
 
-    public void update(){
+    public void update() {
 
     }
 
@@ -72,5 +72,6 @@ public class LevelManager {
         game.getPlaying().getEnemyManager().loadEnemies(newLevel);
         game.getPlaying().getPlayer().loadLevelData(newLevel.getLevelData());
         game.getPlaying().setMaxLevelOffsetX(newLevel.getMaxLevelOffsetX());
+        game.getPlaying().getObjectManager().loadObjects(newLevel);
     }
 }

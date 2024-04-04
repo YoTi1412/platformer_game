@@ -45,6 +45,7 @@ public class GameObjects {
         }
     }
 
+
     public void reset() {
         animationTick = 0;
         animationIndex = 0;
@@ -82,5 +83,9 @@ public class GameObjects {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setDoAnimation(boolean doAnimation) {
+        this.doAnimation = doAnimation;
     }
 }

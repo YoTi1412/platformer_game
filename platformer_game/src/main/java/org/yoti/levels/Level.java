@@ -2,6 +2,9 @@ package org.yoti.levels;
 
 import org.yoti.entities.Crabby;
 import org.yoti.main.Game;
+import org.yoti.objects.GameContainers;
+import org.yoti.objects.Potions;
+import org.yoti.utils.HelpMethods;
 
 
 import java.awt.*;
@@ -13,6 +16,8 @@ import static org.yoti.utils.HelpMethods.*;
 public class Level {
     private BufferedImage image;
     private ArrayList<Crabby> crabbies;
+    private ArrayList<Potions> potions;
+    private ArrayList<GameContainers> containers;
     private int levelTilessWide;
     private int maxTilessWide;
     private int maxLevelOffsetX;
@@ -23,8 +28,18 @@ public class Level {
         this.image = image;
         creatLevelData();
         creatEnemies();
+        createPotions();
+        createContainers();
         calculateLevelOffsets();
         calculatePlayerSpawn();
+    }
+
+    private void createContainers() {
+        containers = HelpMethods.GetContainers(image);
+    }
+
+    private void createPotions() {
+        potions = HelpMethods.GetPotions(image);
     }
 
     private void calculatePlayerSpawn() {
@@ -63,5 +78,13 @@ public class Level {
 
     public Point getPlayerSpawn() {
         return playerSpawn;
+    }
+
+    public ArrayList<Potions> getPotions() {
+        return potions;
+    }
+
+    public ArrayList<GameContainers> getContainers() {
+        return containers;
     }
 }

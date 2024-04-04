@@ -63,6 +63,7 @@ public class Playing extends States implements StatesMethods {
 
     private void loadStartLevel() {
         enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        objectManager.loadObjects(levelManager.getCurrentLevel());
     }
 
     private void calculatingLevelOffset() {
@@ -256,6 +257,7 @@ public class Playing extends States implements StatesMethods {
         levelCompleted = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
+        objectManager.resetAllObjects();
     }
 
     public void setGameOver(boolean gameOver) {
@@ -280,5 +282,13 @@ public class Playing extends States implements StatesMethods {
 
     public ObjectManager getObjectManager() {
         return objectManager;
+    }
+
+    public void checkPotionTouched(Rectangle2D.Float hitbox) {
+        objectManager.checkObjectTouched(hitbox);
+    }
+
+    public void checkObjectHit(Rectangle2D.Float attackBox) {
+        objectManager.checkObjectHit(attackBox);
     }
 }
