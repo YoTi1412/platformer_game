@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class GameMenu extends States implements StatesMethods {
+public class GameMenu extends States implements StateMethods {
     private MenuButton[] buttons = new MenuButton[3];
     private BufferedImage backgroundImage, backgroundMenuImage;
     private int menuX, menuY, menuWidth, menuHeight;

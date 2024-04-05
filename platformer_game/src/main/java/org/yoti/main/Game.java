@@ -1,8 +1,10 @@
 package org.yoti.main;
 
 import org.yoti.gamestates.GameMenu;
+import org.yoti.gamestates.GameOptions;
 import org.yoti.gamestates.GameStates;
 import org.yoti.gamestates.Playing;
+import org.yoti.ui.AudioOptions;
 import org.yoti.utils.LoadSave;
 
 import java.awt.*;
@@ -12,6 +14,8 @@ public class Game implements Runnable {
     private final GamePanel gamePanel;
     private Playing playing;
     private GameMenu gameMenu;
+    private GameOptions gameOptions;
+    private AudioOptions audioOptions;
     public static final int TILES_DEFAULT_SIZE = 32;
     public static final float SCALE = 1.5f;
     public static final int TILES_IN_WIDTH = 26;
@@ -33,8 +37,10 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
+        audioOptions = new AudioOptions();
         gameMenu = new GameMenu(this);
         playing = new Playing(this);
+        gameOptions = new GameOptions(this);
     }
 
     public void startGameLoop() {
@@ -51,6 +57,8 @@ public class Game implements Runnable {
                 playing.update();
                 break;
             case OPTIONS:
+                gameOptions.update();
+                break;
             case QUIT:
             default:
                 System.exit(0);
@@ -65,6 +73,9 @@ public class Game implements Runnable {
                 break;
             case PLAYING:
                 playing.draw(g);
+                break;
+            case OPTIONS:
+                gameOptions.draw(g);
                 break;
             default:
                 break;
@@ -126,5 +137,13 @@ public class Game implements Runnable {
 
     public GameMenu getGameMenu() {
         return gameMenu;
+    }
+
+    public GameOptions getGameOptions() {
+        return gameOptions;
+    }
+
+    public AudioOptions getAudioOptions() {
+        return audioOptions;
     }
 }

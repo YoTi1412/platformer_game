@@ -20,7 +20,7 @@ import java.util.Random;
 import static org.yoti.main.Game.SCALE;
 import static org.yoti.utils.Constants.Environment.*;
 
-public class Playing extends States implements StatesMethods {
+public class Playing extends States implements StateMethods {
     private Player player;
     private EnemyManager enemyManager;
     private LevelManager levelManager;
