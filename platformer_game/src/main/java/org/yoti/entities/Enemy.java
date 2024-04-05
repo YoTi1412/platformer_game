@@ -12,7 +12,7 @@ import static org.yoti.utils.HelpMethods.*;
 public abstract class Enemy extends Entity {
     protected int enemyType;
     protected boolean firstUpdate = true;
-    protected float walkSpeed = 0.35f * Game.SCALE;
+    protected float walkSpeed;
     protected int walkDirection = LEFT;
     protected int tileY;
     protected float attackDistance = Game.TILES_SIZE;

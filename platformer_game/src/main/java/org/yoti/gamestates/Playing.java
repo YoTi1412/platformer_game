@@ -38,6 +38,7 @@ public class Playing extends States implements StatesMethods {
     private Random random = new Random();
     private boolean gameOver;
     private boolean levelCompleted;
+    private boolean playerDying;
 
     public Playing(Game game) {
         super(game);
@@ -98,13 +99,32 @@ public class Playing extends States implements StatesMethods {
             pauseOverlay.update();
         } else if (levelCompleted) {
             levelCompletedOverlay.update();
-        } else if (!gameOver){
+        } else if (gameOver) {
+            gameOverOverlay.update();
+        } else if (playerDying) {
+            player.update();
+        } else {
             levelManager.update();
             objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
-            checkIfCloseToBorder();
+            checkCloseToBorder();
         }
+    }
+
+    private void checkCloseToBorder() {
+        int playerX = (int) player.getHitbox().x;
+        int diff = playerX - xLevelOffset;
+
+        if (diff > rightBorder)
+            xLevelOffset += diff - rightBorder;
+        else if (diff < leftBorder)
+            xLevelOffset += diff - leftBorder;
+
+        if (xLevelOffset > maxLevelOffsetX)
+            xLevelOffset = maxLevelOffsetX;
+        else if (xLevelOffset < 0)
+            xLevelOffset = 0;
     }
 
     private void checkIfCloseToBorder() {
@@ -167,12 +187,13 @@ public class Playing extends States implements StatesMethods {
     @Override
     public void mousePressed(MouseEvent e) {
         if (!gameOver) {
-            if (paused) {
+            if (paused)
                 pauseOverlay.mousePressed(e);
-            } else if (levelCompleted) {
+            else if (levelCompleted)
                 levelCompletedOverlay.mousePressed(e);
-            }
-        }
+        } else
+            gameOverOverlay.mousePressed(e);
+
     }
 
     @Override
@@ -180,9 +201,12 @@ public class Playing extends States implements StatesMethods {
         if (!gameOver) {
             if (paused) {
                 pauseOverlay.mouseReleased(e);
-            } else if (levelCompleted) {
+            }
+            else if (levelCompleted) {
                 levelCompletedOverlay.mouseReleased(e);
             }
+        } else {
+            gameOverOverlay.mouseReleased(e);
         }
     }
 
@@ -191,9 +215,12 @@ public class Playing extends States implements StatesMethods {
         if (!gameOver) {
             if (paused) {
                 pauseOverlay.mouseMoved(e);
-            } else if (levelCompleted) {
+            }
+            else if (levelCompleted) {
                 levelCompletedOverlay.mouseMoved(e);
             }
+        } else {
+            gameOverOverlay.mouseMoved(e);
         }
     }
 
@@ -201,7 +228,9 @@ public class Playing extends States implements StatesMethods {
     public void mouseDragged(MouseEvent e) {
         if (!gameOver) {
             if (paused) {
-                pauseOverlay.mouseDragged(e);
+                {
+                    pauseOverlay.mouseDragged(e);
+                }
             }
         }
     }
@@ -255,6 +284,7 @@ public class Playing extends States implements StatesMethods {
         gameOver = false;
         paused = false;
         levelCompleted = false;
+        playerDying = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
         objectManager.resetAllObjects();
@@ -298,5 +328,9 @@ public class Playing extends States implements StatesMethods {
 
     public void checkSpikesTouched(Player p) {
         objectManager.checkSpikesTouched(p);
+    }
+
+    public void setPlayerDying(boolean playerDying) {
+        this.playerDying = playerDying;
     }
 }

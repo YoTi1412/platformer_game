@@ -10,6 +10,7 @@ import static org.yoti.utils.Constants.ObjectConstants.*;
 
 public class GameObjects {
     protected int x,y, objectType;
+
     protected Rectangle2D.Float hitbox;
     protected boolean doAnimation, active = true;
     protected int animationTick, animationIndex;

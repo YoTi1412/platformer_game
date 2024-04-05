@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D;
 import static org.yoti.utils.Constants.Directions.*;
 import static org.yoti.utils.Constants.EnemyConstants.*;
 
-public class Crabby extends Enemy{
+public class Crabby extends Enemy {
 
     // attack Box
     private int attackBoxOffsetX;
