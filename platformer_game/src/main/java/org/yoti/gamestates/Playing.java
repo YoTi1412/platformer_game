@@ -57,9 +57,9 @@ public class Playing extends States implements StateMethods {
     }
 
     public void loadNextLevel() {
-        resetAll();
         levelManager.loadNextLevel();
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+        resetAll();
     }
 
     private void loadStartLevel() {
